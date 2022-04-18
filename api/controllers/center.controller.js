@@ -46,6 +46,15 @@ async function getAllCenters(req, res, next) {
 async function getCenter(req, res, next) {
     try {
         const center = await Center.findById(req.params.id)
+            .populate('bookings')
+            .populate(
+                {
+                    path: 'bookings',
+                    populate: {
+                        path: 'customerId',
+                        model: 'user'
+                    }
+                })
         res.status(200).send(center)
     } catch (error) {
         next(error)
